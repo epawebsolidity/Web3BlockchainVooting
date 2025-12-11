@@ -1,23 +1,21 @@
-import Navbar from "@/components/Navbar/Navbar";
+"use client";
+import Providers from "@/app/providers";
+import ContentWrapper from "@/components/Layout/ContentWrapper"; // import dari file terpisah
+import LightProvider from "@/context/LightProvider";
 import "@/styles/globals.css";
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode;
-    }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
-            <div className="flex min-h-screen bg-black w-full justify-center">
-                <div className="max-w-6xl p-10 w-full">
-                    <Navbar />
-                    <body>
-                        <main>
+            <body>
+                <Providers>
+                    <LightProvider>
+                        <ContentWrapper>
                             {children}
-                        </main>
-                    </body>
-                </div>
-            </div>
+                        </ContentWrapper>
+                    </LightProvider>
+                </Providers>
+            </body>
         </html>
     );
 }
