@@ -2,14 +2,23 @@
 pragma solidity ^0.8.30;
 
 contract Owned {
-    address internal owner;
+    address public admin;
 
-    constructor() {
-        owner = msg.sender;
+    // ============================================
+    // MODIFIERS
+    // ============================================
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Not Admin");
+        _;
     }
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Not owner");
-        _;
+
+    // ============================================
+    // MAIN FUNCTIONS
+    // ============================================
+    
+    constructor() {
+        admin = msg.sender;
     }
 }

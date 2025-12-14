@@ -1,0 +1,3 @@
+VotingTest:testAddVoting() (gas: 64675)
+VotingTest:testGetProposal() (gas: 63122)
+VotingTest:testVotingProposal() (gas: 109363)

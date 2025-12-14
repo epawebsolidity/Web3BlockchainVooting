@@ -6,28 +6,27 @@ import "./access/Owned.sol";
 
 contract Voting is VotingStorage, Owned {
 
-    function addProposal(string memory name) public onlyOwner {
+    /// @notice Admin Menambah Proposal
+    function addProposal(string memory name) public onlyAdmin {
         proposals.push(Proposal(name, 0));
+        emit AddProposalVoting(msg.sender, name, 0);
     }
 
-    function vote(uint256 _proposalId) public {
-        require(!hasVoted[msg.sender], "Already voted");
-        require(_proposalId < proposals.length, "Invalid proposal");
+    /// @notice Users Votting Proposal
+    function voteProposal(uint256 proposalIndex) public {
+        require(proposalIndex < proposals.length, "Proposal tidak ada");
+        require(!hasVoted[msg.sender], "Sudah memilih");
         hasVoted[msg.sender] = true;
-        proposals[_proposalId].voteCount += 1;
+        proposals[proposalIndex].voteCount += 1;
+        emit Voted(msg.sender, proposalIndex);
     }
 
+    // ============================================
+    // VIEW FUNCTIONS
+    // ============================================
 
-    function getProposalsCount() public view returns (uint256) {
-        return proposals.length;
-    }
-
-    function getProposal(uint256 _id)
-        public
-        view
-        returns (string memory, uint256)
-    {
-        Proposal memory p = proposals[_id];
+    function getProposal(uint256 index) public view returns (string memory, uint256) {
+        Proposal storage p = proposals[index];
         return (p.name, p.voteCount);
     }
 
