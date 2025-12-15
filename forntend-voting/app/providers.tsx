@@ -1,5 +1,6 @@
 "use client";
 
+import { mantleChainTestnet } from "@/utils/chain";
 import {
     darkTheme,
     getDefaultConfig,
@@ -8,19 +9,20 @@ import {
 import "@rainbow-me/rainbowkit/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
-import { http, WagmiProvider } from "wagmi";
-import { mainnet, sepolia } from 'wagmi/chains';
+import { WagmiProvider } from "wagmi";
+
 
 const config = getDefaultConfig({
     appName: 'My RainbowKit App',
     projectId: 'YOUR_PROJECT_ID',
-    chains: [mainnet, sepolia]
+    chains: [mantleChainTestnet]
 });
 
 const queryClient = new QueryClient();
 
 function Providers({ children }: { children: React.ReactNode }) {
     return (
+
         <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
                 <RainbowKitProvider
@@ -35,6 +37,7 @@ function Providers({ children }: { children: React.ReactNode }) {
                 </RainbowKitProvider>
             </QueryClientProvider>
         </WagmiProvider>
+
     );
 }
 

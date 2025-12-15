@@ -1,8 +1,9 @@
 import { useLight } from "@/context/LightContext";
+import { useAuthRole } from "@/hooks/useAuthRole";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 export default function Navbar() {
     const { on } = useLight();
-
+    const { isAdmin, isConnected, address, loading } = useAuthRole();
     return (
         <nav className="w-full">
             {/* Bottom Nav To Desktop */}
@@ -12,7 +13,32 @@ export default function Navbar() {
                     <p>Home</p>
                     <p>Votting</p>
                     <p>Documentation</p>
-                    <ConnectButton />
+                    <ConnectButton.Custom>
+                        {({ account, chain, openConnectModal, openAccountModal }) => {
+                            if (!account) {
+                                return (
+                                    <button
+                                        onClick={openConnectModal}
+                                        className="px-4 py-2 bg-blue-500 text-white rounded"
+                                    >
+                                        Connect Wallet
+                                    </button>
+                                );
+                            }
+
+                            return (
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={openAccountModal} // ini akan buka modal account, termasuk disconnect
+                                        className="px-2 py-1 bg-red-500 text-white rounded"
+                                    >
+                                        Disconnect
+                                    </button>
+                                </div>
+                            );
+                        }}
+                    </ConnectButton.Custom>
+
                 </div>
             </div>
 

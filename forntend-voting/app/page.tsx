@@ -2,7 +2,10 @@
 
 import { TITLES } from "@/constants/title";
 import { useLight } from "@/context/LightContext";
+import { useVoting } from "@/context/VotingContext";
+import { useAuthRole } from "@/hooks/useAuthRole";
 import { useTitle } from "@/hooks/useTitle";
+import { useVotingContract } from "@/hooks/useVoting";
 import Vote01 from "@/public/assert/vote/vote1.jpg";
 import Vote02 from "@/public/assert/vote/vote2.jpg";
 import Vote03 from "@/public/assert/vote/vote3.jpg";
@@ -10,8 +13,12 @@ import Image from "next/image";
 
 export default function LoginPage() {
   useTitle(TITLES.HOME);
+
+  const { name, setName } = useVoting();
+  const { loading, addProposal } = useVotingContract(name, setName);
+  const { isAdmin } = useAuthRole();
   const { on } = useLight();
-  console.log(on);
+
   return (<>
     <div className="flex flex-col md:flex-row justify-between items-center md:px-10 md:py-20 md:gap-10">
       <div className="md:w-1/4 text-center md:text-left md:order-1">
@@ -111,6 +118,78 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
+    </div>
+    <div className="w-full mt-10 flex justify-center">
+      {isAdmin ? (
+        <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 
+                    p-8 rounded-2xl 
+                    bg-black backdrop-blur-md 
+                    border border-white/20 shadow-xl">
+
+          {/* LEFT – FORM */}
+          <div className="flex flex-col gap-4">
+            <h2 className="text-2xl font-bold text-white">
+              Add New Proposal
+            </h2>
+
+            <p className="text-sm text-gray-300">
+              Create a new proposal that users can vote on.
+            </p>
+
+            <input
+              type="text"
+              placeholder="Proposal name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="px-4 py-3 rounded-lg bg-black/40 text-white 
+                     border border-white/20 
+                     focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            <button
+              onClick={() => addProposal(name)}
+              disabled={loading || !name}
+              className="mt-2 px-6 py-3 rounded-lg font-semibold
+                     bg-gradient-to-r from-blue-500 to-purple-600
+                     hover:opacity-90 transition
+                     disabled:opacity-50"
+            >
+              {loading ? "Sending..." : "Add Proposal"}
+            </button>
+          </div>
+
+          {/* RIGHT – INFO PANEL */}
+          <div className="flex flex-col justify-between rounded-xl 
+                      bg-black/40 p-6 border border-white/10">
+
+            <div>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                Admin Panel
+              </h3>
+
+              <p className="text-sm text-gray-300 leading-relaxed">
+                You are logged in as an <span className="text-blue-400 font-semibold">Admin</span>.
+                Only admins can create proposals. Once submitted, proposals
+                will be available for users to vote on.
+              </p>
+            </div>
+
+            <div className="mt-6">
+              <span className="inline-block px-3 py-1 text-xs font-semibold 
+                           rounded-full bg-green-500/20 text-green-400">
+                Admin Access Granted
+              </span>
+            </div>
+          </div>
+
+        </div>
+      ) : (
+        <div className="mt-10 p-6 rounded-xl border border-red-500/40 bg-red-500/10">
+          <p className="text-center text-red-400 font-semibold">
+            🚫 You do not have permission to access this page.
+          </p>
+        </div>
+      )}
     </div>
   </>
   );
