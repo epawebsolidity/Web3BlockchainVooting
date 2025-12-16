@@ -25,9 +25,9 @@ contract Voting is VotingStorage, Owned {
     // VIEW FUNCTIONS
     // ============================================
 
-    function getProposal(uint256 index) public view returns (string memory, uint256) {
-        Proposal storage p = proposals[index];
-        return (p.name, p.voteCount);
+    function getProposalsCount() public view returns (uint256) {
+        return proposals.length;
     }
+
 
 }
